@@ -1,0 +1,52 @@
+all:
+  #hosts:
+    #local:
+    #  ansible_connection: local
+    #  ansible_user: root
+    #  ansible_become: false
+  children:
+    yj29:
+      children:
+        com:
+          hosts:
+            com1:
+              ansible_host: 10.29.1.21
+              ansible_user: root
+              network_interfaces:
+                eth1:
+                  ipaddr: 10.29.2.21
+                eth2:
+                  ipaddr: 10.29.3.21
+                eth3:
+                  ipaddr: 10.29.4.21
+                eth4:
+                  ipaddr: 10.29.5.21
+                vlan10:
+                  ipaddr: 10.29.6.21
+                  type: vlan
+                  vlanid: 10
+                  physdev: eth4
+                vlan11:
+                  ipaddr: 10.29.11.21
+                  type: vlan
+                  vlanid: 11
+                  physdev: eth4
+                bond-replica:
+                  type: linux_bond
+                  member:
+                   - eth5
+                   - eth6
+                  netmask: 24
+                  ipaddr: 10.10.100.201
+                  mtu: 9000
+                  bonding_options: "mode=1 miimon=100"
+                vlan20:
+                  ipaddr: 10.29.7.21
+                  type: vlan
+                  vlanid: 20
+                  physdev: bond-replica
+                vlan21:
+                  ipaddr: 10.29.8.21
+                  type: vlan
+                  vlanid: 21
+                  physdev: bond-replica

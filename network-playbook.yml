@@ -1,0 +1,38 @@
+---
+- name: network test
+  hosts: yj29
+  user: root
+  gather_facts: no
+  tasks:
+    - name: add deploy interfaces ip
+      shell: "ip a a {{ item.value.ipaddr }}/{{ item.value.netmask | default('24') }} dev {{ item.key }}"
+      loop: "{{ network_interfaces | dict2items }}"
+      when: item.value.remove | default(true) == false
+      ignore_errors: True
+      
+    - name: remove interfaces ip
+      shell: "ip a f {{ item.key }}"
+      loop: "{{ network_interfaces | dict2items }}"
+      when: item.value.remove | default(true) == true
+      ignore_errors: True
+ 
+    - name: remove interfaces
+      shell: "ip link delete {{ item.key }}"
+      loop: "{{ network_interfaces | dict2items }}"
+      when: item.value.remove | default(true) == true
+      ignore_errors: True
+ 
+    - name: remove ifcfg files
+      file:
+        state: absent
+        path: '/etc/sysconfig/network-scripts/ifcfg-{{ item.key }}'
+      loop: "{{ network_interfaces | dict2items }}"
+      when: item.value.remove | default(true) == true
+  
+    - name: create template
+      template:
+        src: os_bonding_config_template.yml
+        dest: /root/os_net_config.yml
+    - name: excute os net config
+      shell: |
+        os-net-config -c /root/os_net_config.yml
