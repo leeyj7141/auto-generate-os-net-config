@@ -5,7 +5,7 @@ all:
     #  ansible_user: root
     #  ansible_become: false
   children:
-    yj29:
+    nodes:
       children:
         con:
           hosts:

@@ -1,6 +1,6 @@
 ---
 - name: network test
-  hosts: yj29
+  hosts: nodes
   user: root
   gather_facts: no
   tasks:
