@@ -1,0 +1,56 @@
+all:
+  #hosts:
+    #local:
+    #  ansible_connection: local
+    #  ansible_user: root
+    #  ansible_become: false
+  vars:
+    virtualenv: "/home/venv-os-net-config"
+    virtualenv_bin: "{{ virtualenv }}/bin/"
+    #virtualenv_bin: "/home/venv-os-net-config/bin/"
+  children:
+    nodes:
+      children:
+        con:
+          hosts:
+            con1:
+              ansible_host: 10.26.1.111
+              ansible_user: root
+              network_interfaces:
+                eth1:
+                  ipaddr: 10.26.2.111
+                eth2:
+                eth3:
+                  #ipaddr: 10.26.4.111
+                eth4:
+                  ipaddr: 10.26.5.111
+                vlan10:
+                  ipaddr: 10.26.6.111
+                  type: vlan
+                  vlanid: 10
+                  physdev: eth4
+                vlan11:
+                  ipaddr: 10.26.11.111
+                  type: vlan
+                  vlanid: 11
+                  physdev: eth4
+                bond-replica:
+                  type: linux_bond
+                  member:
+                   - eth5
+                   - eth6
+                  netmask: 24
+                  #ipaddr: 10.10.100.201
+                  mtu: 9000
+                  bonding_options: "mode=1 miimon=100"
+                  gateway: 10.10.100.1
+                vlan20:
+                  ipaddr: 10.26.7.111
+                  type: vlan
+                  vlanid: 20
+                  physdev: bond-replica
+                vlan21:
+                  ipaddr: 10.26.8.111
+                  type: vlan
+                  vlanid: 21
+                  physdev: bond-replica
