@@ -35,4 +35,4 @@
         dest: /root/os_net_config.yml
     - name: excute os net config
       shell: |
-        os-net-config -c /root/os_net_config.yml
+        {{ virtualenv_bin | default("") }}os-net-config -c /root/os_net_config.yml
