@@ -1,7 +1,6 @@
 network_config:
 {% for int in network_interfaces %}
 {% set _int = network_interfaces[int] %}
-{% if  _int['ipaddr'] is not none %}
 {% if  _int['type'] is defined %}
 {% if  (_int['type'] == 'linux_bond' or _int['type'] == 'ovs_bond') %}
   - type: {{ _int['type'] }}
@@ -25,11 +24,12 @@ network_config:
     name: {{ int }}
     use_dhcp: false
 {% endif %}
+{% if  _int['ipaddr'] is defined %}
     addresses:
       - ip_netmask: {{ _int['ipaddr'] }}/{{ _int['netmask'] | default('24') }}
+{% endif %}
     nm_controlled: false
     mtu: {{ _int['mtu'] | default('1500') }}
-{% endif %}
 {% if  _int['gateway'] is defined %}
     routes:
       - ip_netmask: 0.0.0.0/0
